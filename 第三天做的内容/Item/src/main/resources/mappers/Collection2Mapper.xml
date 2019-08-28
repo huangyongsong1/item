@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.vip.items.mapper.Collection2Mapper">
+
+    <insert id="save">
+        INSERT into collection2(uid,pid) VALUES (#{uid},#{pid})
+    </insert>
+    <delete id="delete">
+        UPDATE collection2 SET is_delete=1 WHERE pid=#{pid} and uid=#{uid}
+    </delete>
+</mapper>

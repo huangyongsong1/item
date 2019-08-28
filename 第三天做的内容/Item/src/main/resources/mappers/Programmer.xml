@@ -1,0 +1,60 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.vip.items.mapper.ProgrammerMapper">
+    <resultMap id="findSixProgrammer" type="Programmer">
+        <id property="pid" column="pid"/>
+        <result property="adept" column="adept"/>
+        <result property="finish" column="finish"/>
+        <result property="grade" column="grade"/>
+        <result property="income" column="income"/>
+        <result property="pimage" column="pimage"/>
+        <result property="pname" column="pname"/>
+        <result property="moods" column="moods"/>
+    </resultMap>
+
+    <select id="findSixProgrammers" resultMap="findSixProgrammer">
+        SELECT p.pid,p.pimage,p.pname,p.adept,p.income,p.finish,p.moods,p.grade,p.location
+        FROM programmer p
+        WHERE p.is_delete=0
+        LIMIT #{index},#{size}
+    </select>
+
+    <resultMap id="OrderByIncome" type="Programmer">
+        <id property="pid" column="pid"/>
+        <result property="income" column="income"/>
+        <result property="pname" column="pname"/>
+    </resultMap>
+
+    <select id="findProgrammesrOrderByIncome" resultMap="OrderByIncome">
+        SELECT p.pid,p.pname,p.income
+        FROM programmer p
+        WHERE p.is_delete=0
+        ORDER BY p.income DESC LIMIT 10
+    </select>
+    <select id="findTotalCount" resultType="java.lang.Integer">
+        SELECT count(*) FROM programmer WHERE p.is_delete=0
+    </select>
+    <select id="findAllProgrammers1" resultMap="findSixProgrammer" >
+        SELECT p.pid,p.pimage,p.pname,p.adept,p.income,p.finish,p.moods,p.grade,p.location
+        FROM programmer p
+        WHERE p.is_delete=0 and p.pid IN (SELECT c2.pid FROM collection2 c2 WHERE c2.is_delete=0)
+    </select>
+    <select id="findAllProgrammers2" resultMap="findSixProgrammer">
+        SELECT p.pid,p.pimage,p.pname,p.adept,p.income,p.finish,p.moods,p.grade,p.location
+        FROM programmer p
+        WHERE p.is_delete=0 and p.pid NOT IN (SELECT c2.pid FROM collection2 c2 WHERE c2.is_delete=0)
+    </select>
+    <select id="searchAllProgrammers1" resultMap="findSixProgrammer">
+        SELECT p.pid,p.pimage,p.pname,p.adept,p.income,p.finish,p.moods,p.grade,p.location
+        FROM programmer p
+        WHERE p.is_delete=0 and p.pid IN (SELECT c2.pid FROM collection2 c2 WHERE c2.is_delete=0)
+        AND (p.pname LIKE concat(concat('%',#{keyword}),'%') OR p.adept LIKE concat(concat('%',#{keyword}),'%'))
+    </select>
+    <select id="searchAllProgrammers2" resultMap="findSixProgrammer">
+        SELECT p.pid,p.pimage,p.pname,p.adept,p.income,p.finish,p.moods,p.grade,p.location
+        FROM programmer p
+        WHERE p.is_delete=0 and p.pid NOT IN (SELECT c2.pid FROM collection2 c2 WHERE c2.is_delete=0)
+        AND (p.pname LIKE concat(concat('%',#{keyword}),'%') OR p.adept LIKE concat(concat('%',#{keyword}),'%'))
+    </select>
+
+</mapper>
